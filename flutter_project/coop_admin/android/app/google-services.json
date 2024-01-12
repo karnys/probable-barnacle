@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "653686085719",
+    "project_id": "co-op-project-b0056",
+    "storage_bucket": "co-op-project-b0056.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653686085719:android:4996ff8bcb43b655e8ab12",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC50zSwRTtXFux_2qrCYWIlcqy5Zxr0hNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
