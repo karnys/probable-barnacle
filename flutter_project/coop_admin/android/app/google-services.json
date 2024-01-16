@@ -1,29 +1,40 @@
 {
-  "project_info": {
-    "project_number": "653686085719",
-    "project_id": "co-op-project-b0056",
-    "storage_bucket": "co-op-project-b0056.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:653686085719:android:4996ff8bcb43b655e8ab12",
-        "android_client_info": {
-          "package_name": "com.android.application"
+    "project_info": {
+        "project_number": "653686085719",
+        "project_id": "co-op-project-b0056",
+        "storage_bucket": "co-op-project-b0056.appspot.com"
+    },
+    "client": [{
+        "client_info": {
+            "mobilesdk_app_id": "1:653686085719:android:4996ff8bcb43b655e8ab12",
+            "android_client_info": {
+                "package_name": "com.example.coop_admin"
+            }
+        },
+        "oauth_client": [{
+                "client_id": "653686085719-v5mpn8ho55m8j6t9l8irgc9hns6faklf.apps.googleusercontent.com",
+                "client_type": 1,
+                "android_info": {
+                    "package_name": "com.android.application",
+                    "certificate_hash": "4c945279379b1d0c203587543b203fa6e88ba2c3"
+                }
+            },
+            {
+                "client_id": "653686085719-cnutajjvb76rk12udk86f8l3d2ottfpc.apps.googleusercontent.com",
+                "client_type": 3
+            }
+        ],
+        "api_key": [{
+            "current_key": "AIzaSyC50zSwRTtXFux_2qrCYWIlcqy5Zxr0hNw"
+        }],
+        "services": {
+            "appinvite_service": {
+                "other_platform_oauth_client": [{
+                    "client_id": "653686085719-cnutajjvb76rk12udk86f8l3d2ottfpc.apps.googleusercontent.com",
+                    "client_type": 3
+                }]
+            }
         }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC50zSwRTtXFux_2qrCYWIlcqy5Zxr0hNw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    }],
+    "configuration_version": "1"
 }
