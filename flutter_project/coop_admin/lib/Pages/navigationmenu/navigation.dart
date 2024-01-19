@@ -1,11 +1,11 @@
-import 'package:coop_admin/Pages/home.dart';
-import 'package:coop_admin/Pages/list.dart';
-import 'package:coop_admin/Pages/setting.dart';
+import 'package:coop_admin/Pages/HistoryPage/history.dart';
+import 'package:coop_admin/Pages/HomePage/home.dart';
+import 'package:coop_admin/Pages/SettingPage/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NavigationMenu extends StatelessWidget {
-  const NavigationMenu({super.key});
+  const NavigationMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +22,29 @@ class NavigationMenu extends StatelessWidget {
               controller.selectedIndex.value = index,
           destinations: const [
             NavigationDestination(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.red,
-                  size: 30,
-                ),
-                label: ''),
+              icon: Icon(
+                Icons.home,
+                color: Colors.red,
+                size: 30,
+              ),
+              label: '',
+            ),
             NavigationDestination(
-                icon: Icon(
-                  Icons.list,
-                  color: Colors.red,
-                  size: 30,
-                ),
-                label: ''),
+              icon: Icon(
+                Icons.list,
+                color: Colors.red,
+                size: 30,
+              ),
+              label: '',
+            ),
             NavigationDestination(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.red,
-                  size: 30,
-                ),
-                label: ''),
+              icon: Icon(
+                Icons.settings,
+                color: Colors.red,
+                size: 30,
+              ),
+              label: '',
+            ),
           ],
         ),
       ),
@@ -53,5 +56,6 @@ class NavigationMenu extends StatelessWidget {
 class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
+  // ตั้งค่าหน้าเริ่มต้นเป็น Home
   final screens = [Home(), History(), Setting()];
 }

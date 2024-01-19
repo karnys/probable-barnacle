@@ -1,7 +1,12 @@
-import 'package:coop_admin/Pages/welcome.dart';
+import 'package:coop_admin/Pages/WelcomePage/welcome.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  // Ensure that Firebase is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
