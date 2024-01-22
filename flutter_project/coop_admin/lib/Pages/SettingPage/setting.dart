@@ -1,4 +1,5 @@
 import 'package:coop_admin/Pages/Login&SinginPage/login.dart';
+import 'package:coop_admin/Pages/SettingPage/settinginfo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -32,12 +33,83 @@ class _SettingState extends State<Setting> {
                 ),
               ),
             ),
-            Container(
-              child: Row(
-                children: [],
+            Row(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                      height: 120,
+                      width: 120,
+                      margin: EdgeInsets.only(left: 30, top: 30),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.red),
+                      child: Center(
+                        child: Icon(
+                          Icons.camera_alt_outlined,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Admin',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text('new')
+                    ],
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'General',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  )),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: ListTile(
+                leading: Icon(
+                  Icons.account_circle_outlined,
+                  size: 30,
+                ),
+                title: Text(
+                  'Acount Info',
+                  style: TextStyle(fontSize: 15),
+                ),
+                trailing: IconButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SettingInfo()));
+                  },
+                  icon: Icon(Icons.keyboard_arrow_right),
+                ),
               ),
             ),
+            SizedBox(
+              height: 330,
+            ),
             ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.red[100],
+                    elevation: 1,
+                    padding: EdgeInsets.only(
+                        left: 100, right: 100, top: 15, bottom: 15)),
                 onPressed: () {
                   FirebaseAuth.instance.signOut().then((value) {
                     print('Sign Out');
@@ -45,7 +117,10 @@ class _SettingState extends State<Setting> {
                         MaterialPageRoute(builder: (context) => Login()));
                   });
                 },
-                child: Text('LogOut'))
+                child: Text(
+                  'LogOut',
+                  style: TextStyle(color: Colors.red),
+                ))
           ],
         ),
       ),

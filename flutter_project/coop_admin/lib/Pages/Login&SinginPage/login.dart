@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffBDD9FF),
         flexibleSpace: Padding(
           padding: const EdgeInsets.only(top: 30),
