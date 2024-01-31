@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:coop_admin/Pages/Login&SinginPage/forgot/forgot_pw_page.dart';
 import 'package:coop_admin/Pages/navigationmenu/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,20 @@ class _LoginState extends State<Login> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _passwordConfirmation = TextEditingController();
+  final _userNameController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _numberController = TextEditingController();
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    _passwordConfirmation.dispose();
+    _userNameController.dispose();
+    _genderController.dispose();
+    _numberController.dispose();
+    super.dispose();
+  }
 
   // sign user in method
   void signUserIn() async {
@@ -33,6 +49,17 @@ class _LoginState extends State<Login> {
   // open a dialog vox to add a note
   void openNoteBox() {
     showDialog(context: context, builder: (context) => AlertDialog());
+  }
+
+  Future addUserDetails(
+      String username, String gender, String email, int number) async {
+    await FirebaseFirestore.instance.collection('user').add({
+      'user name': username,
+      'gender': gender,
+      'email': email,
+      'time': Timestamp.now(),
+      'number': number,
+    });
   }
 
   @override
@@ -98,7 +125,7 @@ class _LoginState extends State<Login> {
                   child: TextField(
                     controller: _email,
                     decoration: InputDecoration(
-                      hintText: 'Enter email or Username',
+                      hintText: 'Enter email',
                       hintStyle: TextStyle(fontSize: 10, color: Colors.grey),
                       fillColor: Colors.grey,
                     ),
@@ -156,6 +183,42 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: TextField(
+                          controller: _userNameController,
+                          decoration: InputDecoration(
+                            hintText: 'Username',
+                            hintStyle:
+                                TextStyle(fontSize: 10, color: Colors.grey),
+                            fillColor: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: TextField(
+                          controller: _genderController,
+                          decoration: InputDecoration(
+                            hintText: 'Gender',
+                            hintStyle:
+                                TextStyle(fontSize: 10, color: Colors.grey),
+                            fillColor: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: TextField(
+                          controller: _numberController,
+                          decoration: InputDecoration(
+                            hintText: 'Number',
+                            hintStyle:
+                                TextStyle(fontSize: 10, color: Colors.grey),
+                            fillColor: Colors.grey,
+                          ),
+                        ),
+                      ),
                       // ตรวจสอบว่า password และ confirm password ตรงกันหรือไม่
                       if (_password.text.isNotEmpty &&
                           _passwordConfirmation.text.isNotEmpty &&
@@ -167,7 +230,7 @@ class _LoginState extends State<Login> {
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
-                      SizedBox(height: 35.0),
+                      SizedBox(height: 20.0),
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -244,12 +307,12 @@ class _LoginState extends State<Login> {
                               // ดำเนินการ Sign Up เมื่อที่อยู่อีเมลถูกต้อง และ password ตรงกัน
                               FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
-                                email: _email.text,
-                                password: _password.text,
+                                email: _email.text.trim(),
+                                password: _password.text.trim(),
                               )
                                   .then((value) {
-                                print('Create New Account');
-                                // TODO: ทำการบันทึกข้อมูลผู้ใช้ลงใน Firestore หรือฐานข้อมูลที่ต้องการ
+                                print(
+                                    'Create New Account'); // TODO: ทำการบันทึกข้อมูลผู้ใช้ลงใน Firestore หรือฐานข้อมูลที่ต้องการ
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -276,6 +339,13 @@ class _LoginState extends State<Login> {
                                   },
                                 );
                               });
+                              //add user details
+                              addUserDetails(
+                                _userNameController.text.trim(),
+                                _genderController.text.trim(),
+                                _email.text.trim(),
+                                int.parse(_numberController.text.trim()),
+                              );
                             }
                           },
                           child: Text(
@@ -319,10 +389,20 @@ class _LoginState extends State<Login> {
                             width: 50,
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return ForgotPasswordPage();
+                                  },
+                                ),
+                              );
+                            },
                             child: Text(
                               'Forgot Password ?',
-                              style: TextStyle(fontSize: 10),
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.black),
                             ),
                           ),
                         ],

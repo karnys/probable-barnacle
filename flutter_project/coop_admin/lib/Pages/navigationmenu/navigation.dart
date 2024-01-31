@@ -1,5 +1,6 @@
 import 'package:coop_admin/Pages/HistoryPage/history.dart';
 import 'package:coop_admin/Pages/HomePage/home.dart';
+import 'package:coop_admin/Pages/Scaner/scanner_page.dart';
 import 'package:coop_admin/Pages/SettingPage/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,14 @@ class NavigationMenu extends StatelessWidget {
             NavigationDestination(
               icon: Icon(
                 Icons.home,
+                color: Colors.red,
+                size: 30,
+              ),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.qr_code_scanner_sharp,
                 color: Colors.red,
                 size: 30,
               ),
@@ -57,5 +66,5 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
 
   // ตั้งค่าหน้าเริ่มต้นเป็น Home
-  final screens = [Home(), History(), Setting()];
+  final screens = [Home(), ScannerPage(), History(), Setting()];
 }

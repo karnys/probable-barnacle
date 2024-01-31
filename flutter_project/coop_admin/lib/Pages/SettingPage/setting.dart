@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coop_admin/Pages/Login&SinginPage/login.dart';
 import 'package:coop_admin/Pages/SettingPage/settinginfo.dart';
+import 'package:coop_admin/read%20data/get_user_name.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,8 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,10 +61,9 @@ class _SettingState extends State<Setting> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Admin',
+                        user.email!,
                         style: TextStyle(fontSize: 20),
                       ),
-                      Text('new')
                     ],
                   ),
                 )

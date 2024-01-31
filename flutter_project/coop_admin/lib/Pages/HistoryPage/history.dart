@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 class History extends StatefulWidget {
-  const History({Key? key}) : super(key: key);
-
   @override
   _History createState() => _History();
 }
 
 class _History extends State<History> {
-  String _selectedValue = '';
-  String _selectedPosition = '';
+  // รับค่า collection
+  // ในที่นี้ไม่ได้ใช้ user ในการดึงข้อมูล
+  // หากคุณต้องการใช้ข้อมูลจาก Firestore ควรเพิ่มการใช้ StreamBuilder หรือ FutureBuilder
+  // เพื่อดึงข้อมูลจาก Firestore และแสดงผลใน Widget ได้
+  // CollectionReference user = FirebaseFirestore.instance.collection('user');
+
+  String? _selectedValue;
   int selectedOption = 1;
+
   List<DropdownMenuItem<String>> items = [
     'Number 261',
     'Number 262',
@@ -24,7 +28,10 @@ class _History extends State<History> {
       value: value,
       child: Text(
         value,
-        style: TextStyle(color: Colors.black, fontSize: 14),
+        style: TextStyle(
+          color: Colors.black, // สีเริ่มต้น
+          fontSize: 14,
+        ),
       ),
     );
   }).toList();
@@ -53,9 +60,9 @@ class _History extends State<History> {
                 child: DropdownButton(
                   icon: Icon(Icons.arrow_drop_down_circle, color: Colors.red),
                   items: items,
-                  onChanged: (String? value) {
+                  onChanged: (value) {
                     setState(() {
-                      _selectedValue = value ?? '';
+                      _selectedValue = value as String?;
                     });
                     print('----- value ------');
                     print(_selectedValue);
@@ -68,6 +75,7 @@ class _History extends State<History> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  value: _selectedValue,
                 ),
               ),
             ),
@@ -81,7 +89,6 @@ class _History extends State<History> {
                   value: 1,
                   groupValue: selectedOption,
                   activeColor: Colors.green,
-                  fillColor: MaterialStateProperty.all(Colors.green),
                   onChanged: (int? value) {
                     setState(() {
                       selectedOption = value!;
@@ -92,7 +99,6 @@ class _History extends State<History> {
                   value: 2,
                   groupValue: selectedOption,
                   activeColor: Colors.yellow,
-                  fillColor: MaterialStateProperty.all(Colors.yellow),
                   onChanged: (int? value) {
                     setState(() {
                       selectedOption = value!;
@@ -103,7 +109,6 @@ class _History extends State<History> {
                   value: 3,
                   groupValue: selectedOption,
                   activeColor: Colors.red,
-                  fillColor: MaterialStateProperty.all(Colors.red),
                   onChanged: (int? value) {
                     setState(() {
                       selectedOption = value!;
