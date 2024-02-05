@@ -51,6 +51,11 @@ dependencies:
   dropdown_button2: ^2.3.9
   material_segmented_control: ^5.0.0
   cloud_firestore: ^4.14.0
+  barcode_scan2: ^4.3.0
+  image_picker: ^1.0.7
+  google_maps_flutter: ^2.5.3
+  geolocator: ^10.1.0
+  permission_handler: ^11.2.0
 
 dev_dependencies:
   flutter_test:

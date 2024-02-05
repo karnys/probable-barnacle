@@ -464,18 +464,42 @@ class _LoginState extends State<Login> {
                                   .then((value) {
                                 print('Sign In Success');
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            NavigationMenu()));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NavigationMenu(),
+                                  ),
+                                );
                               }).onError((error, stackTrace) {
                                 print('Error ${error.toString()}');
+                                String errorMessage =
+                                    'An error occurred while signing in.';
+                                if (error is FirebaseAuthException) {
+                                  switch (error.code) {
+                                    case 'invalid-email':
+                                      errorMessage = 'Invalid email address.';
+                                      break;
+                                    case 'user-not-found':
+                                      errorMessage = 'User not found.';
+                                      break;
+                                    case 'wrong-password':
+                                      errorMessage = 'Incorrect password.';
+                                      break;
+                                    case 'user-disabled':
+                                      errorMessage =
+                                          'User account has been disabled.';
+                                      break;
+                                    default:
+                                      errorMessage =
+                                          'Sign in failed. Please try again later.';
+                                      break;
+                                  }
+                                }
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Error'),
-                                      content: Text(error.toString()),
+                                      title: Text('Sign In Error'),
+                                      content: Text(errorMessage),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
