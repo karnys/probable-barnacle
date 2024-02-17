@@ -1,3 +1,4 @@
+import 'package:coop_admin/Pages/HistoryPage/history.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,7 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MapConfirmationPage extends StatefulWidget {
-  const MapConfirmationPage({Key? key}) : super(key: key);
+  final String imageUrl; // เพิ่มตัวแปร imageUrl
+
+  const MapConfirmationPage({Key? key, required this.imageUrl})
+      : super(key: key);
 
   @override
   _MapConfirmationPageState createState() => _MapConfirmationPageState();
@@ -107,9 +111,7 @@ class _MapConfirmationPageState extends State<MapConfirmationPage> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // ใส่โค้ดเมื่อผู้ใช้คลิกปุ่มยืนยันตำแหน่ง
-                  },
+                  onPressed: () {},
                   child: Text(
                     'Confirm Location',
                     style: TextStyle(color: Colors.white),

@@ -1,6 +1,8 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
-        "Datepicker"
+        "Datepicker",
+        "Firebasestorage",
+        "Srring"
     ]
 }

@@ -5,6 +5,8 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:io';
 // เพิ่ม import statement สำหรับ MapConfirmationPage
 
 class ScannerPage extends StatefulWidget {
@@ -119,21 +121,30 @@ class _ScannerPageState extends State<ScannerPage> {
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
-        // ถ้าถ่ายรูปเสร็จสมบูรณ์
-        print('ถ่ายรูปเรียบร้อย: ${pickedFile.path}');
-        // เปิดหน้าแผนที่เมื่อถ่ายรูปเสร็จ
+        // อัปโหลดรูปภาพไปยัง Firebase Storage
+        File imageFile = File(pickedFile.path);
+        String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+        firebase_storage.Reference ref = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child('images/$fileName');
+        await ref.putFile(imageFile);
+
+        print('อัปโหลดรูปภาพไปยัง Firebase Storage เรียบร้อย: $fileName');
+
+        // เปิดหน้ายืนยันแผนที่
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MapConfirmationPage(),
+            builder: (context) => MapConfirmationPage(imageUrl: ref.fullPath),
           ),
         );
       } else {
-        // ถ้าผู้ใช้ยกเลิกหรือมีข้อผิดพลาด
-        print('ผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาดในการเปิดกล้อง');
+        // หากผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาด
+        print('ผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาดขณะเปิดกล้อง');
       }
     } catch (e) {
-      // ถ้ามีข้อผิดพลาดในการเปิดกล้อง
+      // หากมีข้อผิดพลาดในการเปิดกล้อง
       print('ข้อผิดพลาดในการเปิดกล้อง: $e');
     }
   }
