@@ -16,16 +16,16 @@ class Storage {
     }
   }
 
-  Future<firebase_storage.FullMetadata?> getMetadata(String fileName) async {
-    try {
-      final firebase_storage.Reference ref =
-          firebase_storage.FirebaseStorage.instance.ref('images/$fileName');
-      return await ref.getMetadata();
-    } catch (e) {
-      print('An error occurred while getting metadata: $e');
-      return null;
-    }
+  Future<firebase_storage.FullMetadata?> getMetadata(String uid, String imageName) async {
+  try {
+    final firebase_storage.Reference ref = storage.ref('images/$uid/$imageName');
+    firebase_storage.FullMetadata metadata = await ref.getMetadata();
+    return metadata;
+  } catch (e) {
+    print('An error occurred while getting metadata: $e');
+    return null;
   }
+}
 
   Future<List<firebase_storage.Reference>> listFiles() async {
     try {
@@ -42,10 +42,10 @@ class Storage {
     }
   }
 
-  Future<String> downloadURL(String imageName) async {
+  Future<String> downloadURL(String uid, String imageName) async {
     try {
       String downloadURL =
-          await storage.ref('images/$imageName').getDownloadURL();
+          await storage.ref('users/$uid/images/$imageName').getDownloadURL();
       return downloadURL;
     } catch (e) {
       print('An error occurred while getting download URL: $e');
@@ -53,10 +53,10 @@ class Storage {
     }
   }
 
-  Future<List<String>> listAllFiles() async {
+  Future<List<String>> listAllFiles(String uid) async {
     try {
       firebase_storage.ListResult result =
-          await storage.ref('images').listAll();
+          await storage.ref('images/$uid').listAll(); // ใช้ UID ในการค้นหาไฟล์
       List<String> fileNames = result.items
           .map((firebase_storage.Reference ref) => ref.name)
           .toList();
@@ -67,10 +67,11 @@ class Storage {
     }
   }
 
-  Future<String> getDownloadURL(String fileName) async {
+  Future<String> getDownloadURL(String uid, String fileName) async {
     try {
-      String downloadURL =
-          await storage.ref('images/$fileName').getDownloadURL();
+      String downloadURL = await storage
+          .ref('images/$uid/$fileName')
+          .getDownloadURL(); // ใช้ UID และชื่อไฟล์ในการดึง URL ดาวน์โหลด
       return downloadURL;
     } catch (e) {
       print('An error occurred while getting download URL: $e');

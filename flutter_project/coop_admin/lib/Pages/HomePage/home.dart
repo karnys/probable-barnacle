@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:coop_admin/read%20data/get_user_name.dart';
-import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:coop_admin/Service/storage.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -11,31 +10,51 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  //document IDs
-  late List<String> docIDs = [];
+  final Storage storage = Storage();
+  String uid = 'oHgjBDvQ1Sek6GUkpZchFS3pc7F3'; // UID you want to use
 
-  //get docIDs
-  Future<List<String>> getDocId() async {
-    List<String> ids = [];
-    await FirebaseFirestore.instance.collection('user').get().then(
-          (snapshot) => snapshot.docs.forEach(
-            (document) {
-              print(document.reference);
-              ids.add(document.reference.id);
-            },
-          ),
-        );
-    return ids;
-  }
+  Future<List<Widget>> fetchFileMetadata(List<String> imageUrls) async {
+    List<Widget> listWidgets = [];
 
-  @override
-  void initState() {
-    super.initState();
-    getDocId().then((value) {
-      setState(() {
-        docIDs = value;
-      });
-    });
+    for (int i = 0; i < imageUrls.length; i++) {
+      String imageUrl = imageUrls[i];
+      try {
+        firebase_storage.FullMetadata? metadata =
+            await storage.getMetadata(uid, imageUrl);
+        if (metadata != null) {
+          DateTime? creationTime = metadata.timeCreated;
+          if (creationTime != null) {
+            String formattedDateTime =
+                '${creationTime.day}/${creationTime.month}/${creationTime.year} ${creationTime.hour < 10 ? '0${creationTime.hour}' : creationTime.hour}:${creationTime.minute < 10 ? '0${creationTime.minute}' : creationTime.minute}:${creationTime.second < 10 ? '0${creationTime.second}' : creationTime.second}';
+            listWidgets.add(ListTile(
+              title: Text(
+                formattedDateTime,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ));
+          } else {
+            listWidgets.add(ListTile(
+              title: Text('File creation time not available'),
+            ));
+          }
+        } else {
+          listWidgets.add(ListTile(
+            title: Text('Metadata not available or error occurred.'),
+          ));
+        }
+      } catch (e) {
+        listWidgets.add(ListTile(
+          title: Text('Error fetching file metadata: $e'),
+        ));
+      }
+    }
+
+    return listWidgets;
   }
 
   @override
@@ -54,121 +73,32 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: DatePicker(
-              DateTime.timestamp(),
-              height: 100,
-              width: 70,
-              initialSelectedDate: DateTime.now(),
-              selectedTextColor: Colors.white,
-              selectionColor: Colors.red,
-              dayTextStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.red,
-              ),
-              monthTextStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.red,
-              ),
-              dateTextStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 25),
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(5),
-                  bottomRight: Radius.circular(5),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Text(
-                      'NO.',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Name',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: Text(
-                      'Status',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<String>>(
-              future: getDocId(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+      body: FutureBuilder<List<String>>(
+        future: storage.listAllFiles(uid),
+        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return FutureBuilder<List<Widget>>(
+              future: fetchFileMetadata(snapshot.data!),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<Widget>> metadataSnapshot) {
+                if (metadataSnapshot.connectionState == ConnectionState.done) {
+                  return ListView(
+                    children: metadataSnapshot.data!,
+                  );
                 } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Center(
-                          child: Column(
-                            children: [
-                              GetUserName(documentId: snapshot.data![index]),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
                 }
               },
-            ),
-          ),
-        ],
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }

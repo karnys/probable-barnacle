@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:coop_admin/Pages/Scaner/confirm/confirmlocation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/services.dart';
@@ -117,13 +118,17 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   Future<void> _openCamera() async {
-    final picker = ImagePicker();
-    try {
-      final pickedFile = await picker.pickImage(source: ImageSource.camera);
-      if (pickedFile != null) {
-        // อัปโหลดรูปภาพไปยัง Firebase Storage
-        File imageFile = File(pickedFile.path);
-        String fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+  final picker = ImagePicker();
+  try {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path); // ประกาศตัวแปร imageFile
+      // อ่านข้อมูลผู้ใช้ปัจจุบัน
+      final user = FirebaseAuth.instance.currentUser;
+if (user != null) {
+  DateTime now = DateTime.now();
+  String timestamp = now.microsecondsSinceEpoch.toString(); // ใช้ timestamp เป็นส่วนหนึ่งของชื่อไฟล์
+  String fileName = '${user.uid}/$timestamp.jpg'; // ตั้งชื่อไฟล์เป็น UID/timestamp.jpg
         firebase_storage.Reference ref = firebase_storage
             .FirebaseStorage.instance
             .ref()
@@ -139,13 +144,14 @@ class _ScannerPageState extends State<ScannerPage> {
             builder: (context) => MapConfirmationPage(imageUrl: ref.fullPath),
           ),
         );
-      } else {
-        // หากผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาด
-        print('ผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาดขณะเปิดกล้อง');
       }
-    } catch (e) {
-      // หากมีข้อผิดพลาดในการเปิดกล้อง
-      print('ข้อผิดพลาดในการเปิดกล้อง: $e');
+    } else {
+      // หากผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาด
+      print('ผู้ใช้ยกเลิกหรือเกิดข้อผิดพลาดขณะเปิดกล้อง');
     }
+  } catch (e) {
+    // หากมีข้อผิดพลาดในการเปิดกล้อง
+    print('ข้อผิดพลาดในการเปิดกล้อง: $e');
   }
+}
 }

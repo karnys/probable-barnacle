@@ -9,6 +9,8 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   final Storage storage = Storage();
+  String uid =
+      'oHgjBDvQ1Sek6GUkpZchFS3pc7F3'; // ประกาศและกำหนดค่าตัวแปร 'uid' ที่คุณต้องการใช้งาน
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class _HistoryState extends State<History> {
         title: Center(child: Text('ประวัติล่าสุดของคุณ')),
       ),
       body: FutureBuilder<List<String>>(
-        future: storage.listAllFiles(),
+        future: storage.listAllFiles(uid),
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -27,7 +29,7 @@ class _HistoryState extends State<History> {
               itemBuilder: (BuildContext context, int index) {
                 String imageURL = snapshot.data![index];
                 return FutureBuilder<String>(
-                  future: storage.getDownloadURL(imageURL),
+                  future: storage.getDownloadURL(uid, imageURL),
                   builder: (BuildContext context,
                       AsyncSnapshot<String> downloadURLSnapshot) {
                     if (downloadURLSnapshot.connectionState ==
@@ -44,7 +46,7 @@ class _HistoryState extends State<History> {
                         ),
                         title: Text(imageURL),
                         subtitle: FutureBuilder<FullMetadata?>(
-                          future: storage.getMetadata(imageURL),
+                          future: storage.getMetadata(uid,imageURL),
                           builder: (BuildContext context,
                               AsyncSnapshot<FullMetadata?> metadataSnapshot) {
                             if (metadataSnapshot.connectionState ==
